@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -26,14 +27,11 @@ public class Curso {
     @Column(name = "id_curso")
     private  String id;
     
-    @Column(name = "nombre_curso", nullable = false)
+
     private String nombre;
     
-    @Column(name = "descripcion", nullable = false)
+
     private String descripcion;
-    
-    @Enumerated(EnumType.STRING)
-    private TipoCurso tipoCurso;
     
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Inscripcion> inscripciones;
@@ -43,6 +41,15 @@ public class Curso {
 
     public Curso() {
     }
+
+    public Curso(String nombre, String descripcion) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.inscripciones = new ArrayList<>();
+        this.actividades = new ArrayList<>();
+    }
+    
+    
 
     public String getId() {
         return id;
@@ -68,13 +75,6 @@ public class Curso {
         this.descripcion = descripcion;
     }
 
-    public TipoCurso getTipoCurso() {
-        return tipoCurso;
-    }
-
-    public void setTipoCurso(TipoCurso tipoCurso) {
-        this.tipoCurso = tipoCurso;
-    }
 
     public List<Inscripcion> getInscripciones() {
         return inscripciones;
