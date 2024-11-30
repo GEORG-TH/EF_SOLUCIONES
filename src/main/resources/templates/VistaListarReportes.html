@@ -67,46 +67,27 @@
             <table class="table table-dark">
                 <thead>
                     <tr>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Descripción</th>
+                        <th scope="col">Actividad Nombre</th>
+                        <th scope="col">Usuario Nombre</th>
+                        <th scope="col">Respuesta</th>
+                        <th scope="col">Nota</th>
+                        <th scope="col">Comentario</th>
+
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
-                <tbody th:each="actividad : ${actividades}">
+                <tbody th:each="reporte : ${reportes}">
                     <tr>
-                        <td th:text="${actividad.nombre}"></td>
-                        <td th:text="${actividad.descripcion}"></td>
+                        <td th:text="${reporte.actividad.nombre}"></td>
+                        <td th:text="${reporte.usuario.nombre}"></td>
+                        <td th:text="${reporte.respuesta}"></td>
+                        <td th:text="${reporte.nota}"></td>
+                        <td th:text="${reporte.comentario}"></td>
                         <td>
                             <div class="acciones">
-                                <!-- Solo los profesores pueden ver estas opciones -->
-                                <div th:if="${rol.name() == 'PROFESOR'}">
-                                    <a th:href="@{/actividad/modificar/__${actividad.id}__}">
-                                        <i class="fas fa-feather-alt"></i> Modificar
-                                    </a>
-                                    <a th:href="@{/actividad/eliminar/__${actividad.id}__}" 
-                                       onclick="return confirm('¿Estás seguro de que quieres eliminar esta actividad?');">
-                                        <i class="fas fa-trash-alt"></i> Eliminar
-                                    </a>
-                                    
-                                    <a th:href="@{/reporte/listar/__${actividad.id}__}">
-                                        <i class="fas fa-feather-alt"></i> Ver Reportes
-                                    </a>
-                                    
-                                    
-
-                                </div>
-
-                                <!-- Solo los alumnos pueden ver esta opción -->
-                                <div th:if="${rol.name() == 'ALUMNO'}">
- 
-                                    <a th:href="@{/reporte/registrar/__${actividad.id}__}" 
-                                       onclick="return confirm('¿Estás seguro de que quieres Agregar un reporte a esta actividad?');">
-                                        <i class="fas fa-feather-alt"></i> Agregar Reporte
-                                    </a>
-                                    <a th:href="@{/reporte/detalle/__${actividad.id}__}">
-                                        <i class="fas fa-feather-alt"></i> Ver Reporte
-                                    </a>
-                                </div>
+                                <a th:href="@{/reporte/calificar/__${reporte.id}__}">
+                                    <i class="fas fa-feather-alt"></i> Calificar
+                                </a>
                             </div>
                         </td>
                     </tr>

@@ -44,24 +44,74 @@ public class ReporteServicio {
         reporteRepositorio.save(reporte);
     }
 
-    /*--------------------*/
-    public List<Actividad> listarActividadesPorIdCurso(String idCurso) {
-        return actividadRepositorio.buscarActividadesPorIdCurso(idCurso);
+    public List<Reporte> listarReportesPorIdActividad(String idActividad) {
+        return reporteRepositorio.buscarReportesPorIdActividad(idActividad);
+    }
+    
+    
+    public void validarDobleReporte(String idUser, String idActividad)throws MyException{
+        
+        Reporte reporte = reporteRepositorio.buscarReportePorIdUserIdActividad(idUser,idActividad);
+        
+        if (reporte!=null) {
+
+            throw new MyException("No puede realizar doble reporte");
+        }
+        
     }
 
-    /*--------------------*/
 
-
-
-
-    public Actividad buscarPorId(String id) {
-        return actividadRepositorio.buscarPorId(id);
+    public Reporte buscarPorId(String id) {
+        return reporteRepositorio.buscarPorId(id);
+    }
+    
+    public Reporte buscarPorIdCategoriaIdUsuario(String idUser, String idActividad) {
+        return reporteRepositorio.buscarReportePorIdUserIdActividad(idUser,idActividad);
     }
 
     private void validarReporte(String respuesta) throws MyException {
 
         if (respuesta.isEmpty() || respuesta == null) {
             throw new MyException("La respuesta no puede ser nulo o estar vacio");
+        }
+
+    }
+    
+    
+    
+    @Transactional
+    public void calificarReporte(String id, String nota, String comentario) throws MyException {
+
+        validarReporte( nota, comentario);
+
+
+        Optional<Reporte> respuesta1 = reporteRepositorio.findById(id);
+
+        if (respuesta1.isPresent()) {
+
+            Reporte reporte = respuesta1.get();
+            
+            reporte.setNota(nota);
+            
+            reporte.setComentario(comentario);
+            
+            reporte.setEstado("CALIFICADO");
+            
+           
+
+            reporteRepositorio.save(reporte);
+
+        }
+    }
+    
+    private void validarReporte( String nota, String comentario) throws MyException {
+
+
+        if (nota.isEmpty() || nota == null) {
+            throw new MyException("La nota no puede ser nulo o estar vacio");
+        }
+        if (comentario.isEmpty() || comentario == null) {
+            throw new MyException("El comentario no puede ser nulo o estar vacio");
         }
 
     }

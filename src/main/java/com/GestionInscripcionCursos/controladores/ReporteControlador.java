@@ -1,11 +1,13 @@
 package com.GestionInscripcionCursos.controladores;
 
 import com.GestionInscripcionCursos.entidades.Actividad;
+import com.GestionInscripcionCursos.entidades.Reporte;
 import com.GestionInscripcionCursos.entidades.Usuario;
 import com.GestionInscripcionCursos.excepciones.MyException;
 import com.GestionInscripcionCursos.servicios.ActividadServicio;
 import com.GestionInscripcionCursos.servicios.ReporteServicio;
 import com.GestionInscripcionCursos.servicios.UsuarioServicio;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -28,20 +30,37 @@ public class ReporteControlador {
 
     @Autowired
     private ReporteServicio reporteServicio;
-    
+
     @Autowired
     private UsuarioServicio usuarioServicio;
-
 
     @PreAuthorize("hasAnyRole('ROLE_ALUMNO')")
     @GetMapping("/registrar/{id}")
     public String registrar(
             @PathVariable String id,
-            ModelMap modelo) {
+            ModelMap modelo,
+            RedirectAttributes redirectAttributes) {
 
-        modelo.put("actividad", actividadServicio.buscarPorId(id));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        return "VistaRegistrarReporte.html";
+        String emailUser = authentication.getName();
+
+        Usuario usuario = usuarioServicio.buscarEmail(emailUser);
+
+        Actividad actividad = actividadServicio.buscarPorId(id);
+        try {
+            reporteServicio.validarDobleReporte(usuario.getId(), actividad.getId());
+
+            modelo.put("actividad", actividad);
+
+            return "VistaRegistrarReporte.html";
+
+        } catch (MyException ex) {
+
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+            return "redirect:/actividad/listar/" + actividad.getCurso().getId();
+        }
+
     }
 
     @PostMapping("/registro/{id}")
@@ -51,7 +70,7 @@ public class ReporteControlador {
             RedirectAttributes redirectAttributes) {
 
         Actividad actividad = actividadServicio.buscarPorId(id);
-        
+
         try {
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -63,22 +82,80 @@ public class ReporteControlador {
             reporteServicio.crearReporte(respuesta, id, usuario.getId());
             redirectAttributes.addFlashAttribute("exito", "Reporte Registrado Correctamente!");
             return "redirect:/actividad/listar/" + actividad.getCurso().getId();
-            
+
         } catch (MyException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
             return "redirect:/reporte/registrar/" + actividad.getId();
         }
     }
 
-    /*@PreAuthorize("hasAnyRole('ROLE_PROFESOR')")
+    @PreAuthorize("hasAnyRole('ROLE_PROFESOR')")
     @GetMapping("/listar/{id}")
     public String listar(
             @PathVariable String id,
             ModelMap modelo) {
 
-        List<Actividad> actividades = actividadServicio.listarActividadesPorIdCurso(id);
-        modelo.addAttribute("actividades", actividades);
+        List<Reporte> reportes = reporteServicio.listarReportesPorIdActividad(id);
+        modelo.addAttribute("reportes", reportes);
 
-        return "VistaListarActividades.html";
-    }*/
+        return "VistaListarReportes.html";
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_PROFESOR')")
+    @GetMapping("/calificar/{id}")
+    public String calificar(
+            @PathVariable String id,
+            ModelMap modelo) {
+
+        modelo.put("reporte", reporteServicio.buscarPorId(id));
+
+        return "VistaCalificarReporte.html";
+    }
+
+    @PostMapping("/calificar/{id}")
+    public String calificar(
+            @PathVariable String id,
+            @RequestParam String nota,
+            @RequestParam String comentario,
+            RedirectAttributes redirectAttributes) {
+
+        Reporte reporte = reporteServicio.buscarPorId(id);
+
+        try {
+
+            reporteServicio.calificarReporte(id, nota, comentario);
+
+            redirectAttributes.addFlashAttribute("exito", "Reporte Calificado Correctamente!");
+
+            return "redirect:/reporte/listar/" + reporte.getActividad().getId();
+
+        } catch (MyException ex) {
+
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+
+            return "redirect:/reporte/calificar/" + reporte.getId();
+        }
+
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ALUMNO')")
+    @GetMapping("/detalle/{id}")
+    public String verDetalle(@PathVariable String id, ModelMap modelo) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String emailUser = authentication.getName();
+
+        Usuario usuario = usuarioServicio.buscarEmail(emailUser);
+
+        Actividad actividad = actividadServicio.buscarPorId(id);
+
+        Reporte reporte = reporteServicio.buscarPorIdCategoriaIdUsuario(usuario.getId(), actividad.getId());
+
+        modelo.put("reporte", reporte);
+
+        return "reporteDetalle.html";
+
+    }
+
 }
