@@ -1,16 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.GestionInscripcionCursos.controladores;
 
 import com.GestionInscripcionCursos.entidades.Curso;
+import com.GestionInscripcionCursos.entidades.Usuario;
 import com.GestionInscripcionCursos.enumeraciones.TipoCurso;
 import com.GestionInscripcionCursos.excepciones.MyException;
+import com.GestionInscripcionCursos.repositorios.UsuarioRepositorio;
 import com.GestionInscripcionCursos.servicios.CursoServicio;
+import com.GestionInscripcionCursos.servicios.UsuarioServicio;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,9 @@ public class CursoControlador {
 
     @Autowired
     private CursoServicio cursoServicio;
+
+    @Autowired
+    private UsuarioServicio usuarioServicio;
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping("/registrar")
@@ -110,6 +114,100 @@ public class CursoControlador {
         }
 
         return "redirect:../lista";
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_PROFESOR')")
+    @GetMapping("/listaDisponiblesProfesor")
+    public String listarCursosDisponiblesProfesor(ModelMap modelo) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String emailUser = authentication.getName();
+
+        Usuario usuario = usuarioServicio.buscarEmail(emailUser);
+
+        List<Curso> cursos = cursoServicio.listarCursosDisponiblesProfesor(usuario.getId());
+
+        modelo.addAttribute("cursos", cursos);
+
+        return "VistaListarCursosDisponiblesProfesor.html";
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_PROFESOR')")
+    @GetMapping("/listaInscritosProfesor")
+    public String listarCursosInscritosProfesor(ModelMap modelo) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String emailUser = authentication.getName();
+
+        Usuario usuario = usuarioServicio.buscarEmail(emailUser);
+
+        List<Curso> cursos = cursoServicio.listarCursosInscritosProfesor(usuario.getId());
+
+        modelo.addAttribute("cursos", cursos);
+
+        return "VistaListarCursosInscritosProfesor.html";
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ALUMNO')")
+    @GetMapping("/listaDisponiblesAlumno")
+    public String listarCursosDisponiblesAlumno(ModelMap modelo) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String emailUser = authentication.getName();
+
+        Usuario usuario = usuarioServicio.buscarEmail(emailUser);
+
+        List<Curso> cursos = cursoServicio.listarCursosDisponiblesAlumno(usuario.getId());
+
+        modelo.addAttribute("cursos", cursos);
+
+        return "VistaListarCursosDisponiblesAlumno.html";
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ALUMNO')")
+    @GetMapping("/listaInscritosAlumno")
+    public String listarCursosInscritosAlumno(ModelMap modelo) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String emailUser = authentication.getName();
+
+        Usuario usuario = usuarioServicio.buscarEmail(emailUser);
+
+        List<Curso> cursos = cursoServicio.listarCursosInscritosAlumno(usuario.getId());
+
+        modelo.addAttribute("cursos", cursos);
+
+        return "VistaListarCursosInscritosAlumno.html";
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_PROFESOR', 'ROLE_ALUMNO')")
+    @GetMapping("/inscribir/{id}")
+    public String inscribirCurso(@PathVariable String id, RedirectAttributes redirectAttributes) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String emailUser = authentication.getName();
+
+        Usuario usuario = usuarioServicio.buscarEmail(emailUser);
+
+        try {
+
+            cursoServicio.inscribirCurso(usuario.getId(), id);
+
+            redirectAttributes.addFlashAttribute("exito", "Curso Inscrito Correctamente!");
+
+        } catch (MyException ex) {
+
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        }
+        if (usuario.getRol().name().equals("PROFESOR")) {
+            return "redirect:../listaDisponiblesProfesor";
+
+        } else {
+            return "redirect:../listaDisponiblesAlumno";
+        }
+
     }
 
 }

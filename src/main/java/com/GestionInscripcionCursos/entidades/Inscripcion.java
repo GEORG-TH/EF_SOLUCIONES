@@ -29,7 +29,7 @@ public class Inscripcion {
     private Date fechaCreacion;
     
     
-    private Boolean estado;
+    private String estado;
     
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -39,12 +39,11 @@ public class Inscripcion {
     @ManyToOne
     @JoinColumn(name = "curso_id", nullable = false)
     private Curso curso;
-
+    
     public Inscripcion() {
     }
 
-    public Inscripcion(String id, Date fechaCreacion, Boolean estado, Usuario usuario, Curso curso) {
-        this.id = id;
+    public Inscripcion(Date fechaCreacion, String estado, Usuario usuario, Curso curso) {
         this.fechaCreacion = fechaCreacion;
         this.estado = estado;
         this.usuario = usuario;
@@ -67,11 +66,11 @@ public class Inscripcion {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public Boolean getEstado() {
+    public String getEstado() {
         return estado;
     }
 
-    public void setEstado(Boolean estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 
@@ -92,6 +91,9 @@ public class Inscripcion {
     }
     
     
+
+    
+
     
     
     

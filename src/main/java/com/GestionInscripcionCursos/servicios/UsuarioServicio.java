@@ -112,6 +112,10 @@ public class UsuarioServicio implements UserDetailsService {
             return null;
         }
     }
+    
+    public Usuario buscarEmail(String id) {
+        return usuarioRepositorio.buscarPorEmail(id);
+    }
 
     
 
