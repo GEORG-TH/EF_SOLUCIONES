@@ -60,7 +60,7 @@
 
         <div class="container-fluid m-5 contenedor">
 
-            <form class="formulario" th:action="@{/curso/modificar/__${curso.id}__}" th:object="${curso}" method="POST">
+            <form class="formulario" th:action="@{/curso/modificar/{id}(id=${curso.id})}" th:object="${curso}" method="POST">
                 <input type="hidden" th:field="*{id}">
 
                 <h1>Modificar Curso</h1>

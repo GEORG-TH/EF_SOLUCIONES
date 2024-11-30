@@ -21,6 +21,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import java.util.ArrayList;
 import java.util.Date;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -51,12 +52,11 @@ public class Actividad {
     public Actividad() {
     }
 
-    public Actividad(String id, String nombre, String descripcion, Curso curso, List<Reporte> reportes) {
-        this.id = id;
+    public Actividad(String nombre, String descripcion, Curso curso) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.curso = curso;
-        this.reportes = reportes;
+        this.reportes = new ArrayList<>();
     }
 
     public String getId() {

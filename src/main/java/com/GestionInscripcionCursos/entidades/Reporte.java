@@ -30,6 +30,8 @@ public class Reporte {
     
     private String comentario;
     
+    private String estado;
+    
     @Temporal(TemporalType.DATE)
     private Date fechaCreacion;
     
@@ -44,15 +46,17 @@ public class Reporte {
     public Reporte() {
     }
 
-    public Reporte(String id, String respuesta, String nota, String comentario, Date fechaCreacion, Usuario usuario, Actividad actividad) {
-        this.id = id;
+    public Reporte(String respuesta, String nota, String comentario, String estado, Date fechaCreacion, Usuario usuario, Actividad actividad) {
         this.respuesta = respuesta;
         this.nota = nota;
         this.comentario = comentario;
+        this.estado = estado;
         this.fechaCreacion = fechaCreacion;
         this.usuario = usuario;
         this.actividad = actividad;
     }
+
+    
 
     public String getId() {
         return id;
@@ -86,6 +90,14 @@ public class Reporte {
         this.comentario = comentario;
     }
 
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
     public Date getFechaCreacion() {
         return fechaCreacion;
     }
@@ -110,7 +122,8 @@ public class Reporte {
         this.actividad = actividad;
     }
 
-   
+    
+
     
     
     

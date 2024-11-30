@@ -80,13 +80,14 @@
                         <td th:text="${curso.descripcion}"></td>
                         <td>
                             <div class="acciones">
-                                <a th:href="@{/curso/modificar/__${curso.id}__}">
-                                    <i class="fas fa-feather-alt"></i> Modificar
+                                <a th:href="@{/actividad/registrar/__${curso.id}__}">
+                                    <i class="fas fa-feather-alt"></i> Agregar Actividad
                                 </a>
-                                <a th:href="@{/curso/eliminar/__${curso.id}__}" 
-                                   onclick="return confirm('¿Estás seguro de que quieres eliminar este curso?');">
-                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                
+                                <a th:href="@{/actividad/listar/__${curso.id}__}">
+                                    <i class="fas fa-feather-alt"></i> Ver Actividades
                                 </a>
+                                
                             </div>
                         </td>
 
