@@ -16,32 +16,50 @@
     <body>
 
         <nav class="navbar navbar-expand-lg navBar">
-
             <div class="collapse navbar-collapse elementosNav" id="navbarNavDropdown">
                 <ul class="navbar-nav ms-auto elementos">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" th:if="${session.usuariosession != null}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Salas
+                            Cursos
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" th:href="@{/sala/lista}">Listar Salas</a></li>
-                            <li><a class="dropdown-item" th:href="@{/sala/registrar}">Registrar Sala</a></li>
+                            <li><a class="dropdown-item" th:href="@{/curso/listaDisponiblesProfesor}">Ver Cursos Disponibles</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" th:href="@{/curso/listaInscritosProfesor}">Ver Cursos Inscritos</a></li>
+                            <li><hr class="dropdown-divider"></li>
+
                         </ul>
-
-
                     </li>
-
-
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" th:if="${session.usuariosession != null}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Inscripciones
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" th:href="@{/inscripcion/listaPendientesAlumno}">Listar Inscripciones Pendientes </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" th:href="@{/inscripcion/listaRealizadasAlumno}">Listar Inscripciones Realizadas </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                        </ul>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Perfil
                         </a>
-
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">     
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="/logout" >Cerrar Sesión</a></li>
                         </ul>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" th:if="${session.usuariosession == null}" href="/registrar" id="navbarDropdown" role="button" aria-expanded="false">
+                            Registrate!
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:if="${session.usuariosession == null}" href="/login" id="navbarDropdown" role="button" aria-expanded="false">
+                            LOGIN!
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -54,7 +72,7 @@
         </div>
         <div th:if="${error}!=null" class="card text-white bg-danger mb-3 mensajeError" >
             <div class="card-body">
-                <h5 class="card-title">Error ð</h5>
+                <h5 class="card-title">Error Ã°ÂÂÂ</h5>
                 <p class="card-text" th:text="${error}"></p>
             </div>
         </div>
@@ -79,8 +97,8 @@
                 </div>
 
                 <div class="form-group my-3">
-                    <label class="mb-2">Descripci�n</label> 
-                    <input type="text" class="form-control" name="descripcion" placeholder="Descripci�n" >
+                    <label class="mb-2">Descripción</label> 
+                    <input type="text" class="form-control" name="descripcion" placeholder="Descripción" >
                 </div>
 
 
@@ -101,12 +119,21 @@
         </div>
 
 
-        <footer class="text-muted py-5">
+        <!-- Footer -->
+        <footer class="footer">
             <div class="containerFooter">
                 <p class="mb-1">Album example is &copy; Bootstrap,<br>but please download and customize it for yourself!</p>
-                <p class="mb-0">New to Bootstrap? <a href="/"><br>Visit the homepage</a> or read our <a href="../getting-started/introduction/">getting started guide</a>.</p>
-                <p class="float-end mb-1">
-                    <a href="#" style="text-decoration:none"><span>⬆️</span> Back to top</a>
+                <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a href="../getting-started/introduction/">getting started guide</a>.</p>
+
+                <div class="social-icons">
+                    <a href="#" target="_blank" class="fab fa-facebook-square"></a>
+                    <a href="#" target="_blank" class="fab fa-twitter-square"></a>
+                    <a href="#" target="_blank" class="fab fa-instagram"></a>
+                    <a href="#" target="_blank" class="fab fa-linkedin"></a>
+                </div>
+
+                <p class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+                    <span>⬆️</span> Back to top
                 </p>
             </div>
         </footer>

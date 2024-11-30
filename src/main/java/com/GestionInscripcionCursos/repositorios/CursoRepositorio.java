@@ -19,11 +19,10 @@ public interface CursoRepositorio extends JpaRepository<Curso, String> {
     @Query("SELECT c FROM Curso c LEFT JOIN c.inscripciones i LEFT JOIN i.usuario u WHERE (i.usuario.id != :idUser OR i.estado != 'APROBADO' OR i.usuario.id IS NULL) AND (u.rol = 'PROFESOR' OR u.id IS NULL)")
     public List<Curso> buscarCursosDisponiblesProfesor(@Param("idUser") String idUser);
 
-
     @Query("SELECT c FROM Curso c JOIN c.inscripciones i JOIN i.usuario u WHERE i.usuario.id = :idUser AND i.estado = 'APROBADO' AND u.rol = 'PROFESOR'")
     public List<Curso> buscarCursosInscritosProfesor(@Param("idUser") String idUser);
 
-    @Query("SELECT c FROM Curso c LEFT JOIN c.inscripciones i LEFT JOIN i.usuario u WHERE (i.usuario.id != :idUser OR i.estado != 'APROBADO' OR i.usuario.id IS NULL) AND (u.rol = 'ALUMNO' OR u.id IS NULL)")
+     @Query("SELECT c FROM Curso c LEFT JOIN c.inscripciones i LEFT JOIN i.usuario u WHERE (i.usuario.id != :idUser OR i.estado != 'APROBADO' OR i.usuario.id IS NULL) AND (u.rol = 'ALUMNO' OR u.id IS NULL)")
     public List<Curso> buscarCursosDisponiblesAlumno(@Param("idUser") String idUser);
 
     @Query("SELECT c FROM Curso c JOIN c.inscripciones i JOIN i.usuario u WHERE i.usuario.id = :idUser AND i.estado = 'APROBADO' AND u.rol = 'ALUMNO'")
