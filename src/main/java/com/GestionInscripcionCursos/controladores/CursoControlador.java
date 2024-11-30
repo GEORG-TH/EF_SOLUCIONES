@@ -2,9 +2,7 @@ package com.GestionInscripcionCursos.controladores;
 
 import com.GestionInscripcionCursos.entidades.Curso;
 import com.GestionInscripcionCursos.entidades.Usuario;
-import com.GestionInscripcionCursos.enumeraciones.TipoCurso;
 import com.GestionInscripcionCursos.excepciones.MyException;
-import com.GestionInscripcionCursos.repositorios.UsuarioRepositorio;
 import com.GestionInscripcionCursos.servicios.CursoServicio;
 import com.GestionInscripcionCursos.servicios.UsuarioServicio;
 import java.util.List;

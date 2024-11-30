@@ -64,7 +64,51 @@
 
         <div class="container m-5" >
 
-            a
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody th:each="actividad : ${actividades}">
+                    <tr>
+                        <td th:text="${actividad.nombre}"></td>
+                        <td th:text="${actividad.descripcion}"></td>
+                        <td>
+                            <div class="acciones">
+                                <!-- Solo los profesores pueden ver estas opciones -->
+                                <div th:if="${rol.name() == 'PROFESOR'}">
+                                    <a th:href="@{/actividad/modificar/__${actividad.id}__}">
+                                        <i class="fas fa-feather-alt"></i> Modificar
+                                    </a>
+                                    <a th:href="@{/actividad/eliminar/__${actividad.id}__}" 
+                                       onclick="return confirm('¿Estás seguro de que quieres eliminar esta actividad?');">
+                                        <i class="fas fa-trash-alt"></i> Eliminar
+                                    </a>
+                                    
+                                </div>
+
+                                <!-- Solo los alumnos pueden ver esta opción -->
+                                <div th:if="${rol.name() == 'ALUMNO'}">
+                                    <a th:href="@{/reporte/registrar/__${actividad.id}__}">
+                                        <i class="fas fa-feather-alt"></i> Agregar Reporte
+                                    </a>
+                                    <a th:href="@{/reporte/registrar/__${actividad.id}__}">
+                                        <i class="fas fa-feather-alt"></i> Ver Reporte
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+
+
 
             <section class="py-5 text-center container">
                 <div class="row py-lg-5">
@@ -77,6 +121,12 @@
 
         </div>
 
+
+
+
+
+
+
         <footer class="text-muted py-5">
             <div class="containerFooter">
                 <p class="mb-1">Album example is &copy; Bootstrap,<br>but please download and customize it for yourself!</p>
@@ -86,6 +136,10 @@
                 </p>
             </div>
         </footer>
+
+
+
+
 
 
 

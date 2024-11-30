@@ -1,12 +1,17 @@
 package com.GestionInscripcionCursos.controladores;
 
 import com.GestionInscripcionCursos.entidades.Actividad;
+import com.GestionInscripcionCursos.entidades.Usuario;
+import com.GestionInscripcionCursos.enumeraciones.Rol;
 import com.GestionInscripcionCursos.excepciones.MyException;
 import com.GestionInscripcionCursos.servicios.ActividadServicio;
 import com.GestionInscripcionCursos.servicios.CursoServicio;
+import com.GestionInscripcionCursos.servicios.UsuarioServicio;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +30,9 @@ public class ActividadControlador {
 
     @Autowired
     private CursoServicio cursoServicio;
+    
+    @Autowired
+    private UsuarioServicio usuarioServicio;
 
     @PreAuthorize("hasAnyRole('ROLE_PROFESOR')")
     @GetMapping("/registrar/{id}")
@@ -58,6 +66,16 @@ public class ActividadControlador {
             @PathVariable String id,
             ModelMap modelo) {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String emailUser = authentication.getName();
+
+        Usuario usuario = usuarioServicio.buscarEmail(emailUser);
+        
+        Rol rol = usuario.getRol();
+        
+        modelo.addAttribute("rol", rol);
+
         List<Actividad> actividades = actividadServicio.listarActividadesPorIdCurso(id);
         modelo.addAttribute("actividades", actividades);
 
@@ -86,7 +104,7 @@ public class ActividadControlador {
 
         try {
 
-            actividadServicio.modificarActividad(id,nombre, descripcion);
+            actividadServicio.modificarActividad(id, nombre, descripcion);
 
             redirectAttributes.addFlashAttribute("exito", "Actividad Modificado Correctamente!");
 
@@ -96,7 +114,7 @@ public class ActividadControlador {
 
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
 
-            return "redirect:/actividad/modificar/" + actividad.getCurso().getId();
+            return "redirect:/actividad/modificar/" + actividad.getId();
         }
 
     }
@@ -104,9 +122,9 @@ public class ActividadControlador {
     @PreAuthorize("hasAnyRole('ROLE_PROFESOR')")
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable String id, RedirectAttributes redirectAttributes) {
-        
+
         Actividad actividad = actividadServicio.buscarPorId(id);
-        
+
         try {
             actividadServicio.eliminarActividad(id);
 

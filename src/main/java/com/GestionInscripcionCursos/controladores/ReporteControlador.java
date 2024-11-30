@@ -1,5 +1,6 @@
 package com.GestionInscripcionCursos.controladores;
 
+import com.GestionInscripcionCursos.entidades.Actividad;
 import com.GestionInscripcionCursos.entidades.Usuario;
 import com.GestionInscripcionCursos.excepciones.MyException;
 import com.GestionInscripcionCursos.servicios.ActividadServicio;
@@ -49,6 +50,8 @@ public class ReporteControlador {
             @RequestParam String respuesta,
             RedirectAttributes redirectAttributes) {
 
+        Actividad actividad = actividadServicio.buscarPorId(id);
+        
         try {
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -59,10 +62,11 @@ public class ReporteControlador {
 
             reporteServicio.crearReporte(respuesta, id, usuario.getId());
             redirectAttributes.addFlashAttribute("exito", "Reporte Registrado Correctamente!");
-            return "redirect:/actividad/listaInscritosAlumno";
+            return "redirect:/actividad/listar/" + actividad.getCurso().getId();
+            
         } catch (MyException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
-            return "redirect:/reporte/registrar/" + id;
+            return "redirect:/reporte/registrar/" + actividad.getId();
         }
     }
 

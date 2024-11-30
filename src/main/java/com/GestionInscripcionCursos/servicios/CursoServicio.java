@@ -1,16 +1,14 @@
 package com.GestionInscripcionCursos.servicios;
 
-import com.GestionInscripcionCursos.entidades.Actividad;
+
 import com.GestionInscripcionCursos.entidades.Curso;
 import com.GestionInscripcionCursos.entidades.Inscripcion;
 import com.GestionInscripcionCursos.entidades.Usuario;
-import com.GestionInscripcionCursos.enumeraciones.TipoCurso;
 import com.GestionInscripcionCursos.excepciones.MyException;
 import com.GestionInscripcionCursos.repositorios.CursoRepositorio;
 import com.GestionInscripcionCursos.repositorios.InscripcionRepositorio;
 import com.GestionInscripcionCursos.repositorios.UsuarioRepositorio;
 import jakarta.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
